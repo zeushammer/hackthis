@@ -1,4 +1,4 @@
-import sys, os
+import sys, os, shlex
 
 print "Initializating connection handshake to secure server..."
 #show blinking cursor, disable keyboard entry
@@ -91,36 +91,57 @@ class simpleapp_tk(Tkinter.Tk):
         self.serverlog['state'] = 'disabled'
 
     def interpet(self, command):
-        validCommands = ['connect', 'hack', 'copy']
+        validCommands = ['connect']
         # write the command to the screen
         self.writeToScreen(command)
         # write to debug screen
         print 'Command: "%s"' % command
 
         # get the keyword attempted
-        keyword = command[:command.find(' ')]
+        if command.find(' ') > 0:
+            keyword = command[:command.find(' ')]
+        else:
+            keyword = command
         # write to debug screen
         print 'keyword: "%s"' % keyword        
 
         while True:
             # look for a space
             if command.find(' ') > 0:
+                #legit command with a space after keyword
+                pass
             else:
-                self.writeToScreen('Missing Required Parameters')
+                if keyword not in validCommands:
+                    self.writeToScreen('Invalid Command')
+                else:
+                    self.writeToScreen('Missing Required Parameters')
                 break
             if keyword not in validCommands:
-                if keyword in validCommands:
+                self.writeToScreen('Invalid Command')
+                break
 
-                else:
-                    self.writeToScreen('Invalid Command')
-                    break
-
+            #dict mapping commands to methods for easy selection
             dictCommands = {'connect': self.connect}
-            dictCommands[keyword[:firstSpace]]()
+
+            #get the args from the string
+            args = shlex.split(command[command.find(' '):])
+
+            for arg in args:
+                print arg
+
+            #run method with args
+            dictCommands[keyword](args)
+            
+            # end main loop
             break
 
-    def connect(self):
-        self.writeToScreen('connect where?')
+    def connect(self, args):
+        print 'connect method running'
+        print len(args)
+        if len(args) != 1:
+            self.writeToScreen('Invalid parameters')
+        else:
+            self.writeToScreen('Attempting to connect to: ' + args[0])
 
 if __name__ == "__main__":
     app = simpleapp_tk(None)
