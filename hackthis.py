@@ -1,4 +1,4 @@
-import sys, os, urwid
+import sys, os
 
 print "Initializating connection handshake to secure server..."
 #show blinking cursor, disable keyboard entry
@@ -45,6 +45,7 @@ class simpleapp_tk(Tkinter.Tk):
         self.entry = Tkinter.Entry(self)
         self.entry.grid(column=0,row=1,columnspan=2,sticky='EW')
         self.entry.bind("<Return>", self.OnPressEnter)
+        self.entry.focus()
 
         # Server response
         self.serverlog = Tkinter.Text(state='disabled', width=80, height=24, wrap='none', bg='black', fg='white')
@@ -55,7 +56,7 @@ class simpleapp_tk(Tkinter.Tk):
         #label.grid(column=0,row=1,columnspan=2,sticky='EW')
 
         # Local system response
-        self.log = Tkinter.Text(state='disabled', width=80, height=24, wrap='none')
+        self.log = Tkinter.Text(state='disabled', width=80, height=24, wrap='none', bg='black', fg='green')
         self.log.grid(column=0,row=0,columnspan=1,sticky='EW')
 
         self.grid_columnconfigure(0,weight=1)
@@ -66,10 +67,10 @@ class simpleapp_tk(Tkinter.Tk):
 
     def OnPressEnter(self,event):
         print "You pressed enter !"
-        self.writeToLog(self.entry.get())
+        self.interpet(self.entry.get())
         self.entry.delete(0, len(self.entry.get()))
 
-    def writeToLog(self, msg):
+    def writeToScreen(self, msg):
         numlines = self.log.index('end - 1 line').split('.')[0]
         self.log['state'] = 'normal'
         if numlines==24:
@@ -88,6 +89,38 @@ class simpleapp_tk(Tkinter.Tk):
             self.serverlog.insert('end', '\n')
         self.serverlog.insert('end', msg)
         self.serverlog['state'] = 'disabled'
+
+    def interpet(self, command):
+        validCommands = ['connect', 'hack', 'copy']
+        # write the command to the screen
+        self.writeToScreen(command)
+        # write to debug screen
+        print 'Command: "%s"' % command
+
+        # get the keyword attempted
+        keyword = command[:command.find(' ')]
+        # write to debug screen
+        print 'keyword: "%s"' % keyword        
+
+        while True:
+            # look for a space
+            if command.find(' ') > 0:
+            else:
+                self.writeToScreen('Missing Required Parameters')
+                break
+            if keyword not in validCommands:
+                if keyword in validCommands:
+
+                else:
+                    self.writeToScreen('Invalid Command')
+                    break
+
+            dictCommands = {'connect': self.connect}
+            dictCommands[keyword[:firstSpace]]()
+            break
+
+    def connect(self):
+        self.writeToScreen('connect where?')
 
 if __name__ == "__main__":
     app = simpleapp_tk(None)
