@@ -1,4 +1,4 @@
-import sys, os, shlex
+import sys, os, shlex, time
 
 print "Initializating connection handshake to secure server..."
 #show blinking cursor, disable keyboard entry
@@ -18,6 +18,10 @@ print ">"
 # run command
 
 # commands
+# connect to server
+
+
+
 # > begin hacking
 #  -> show on server response terminal (SRT): "Connected to server X"
 # \> run serverinfo
@@ -49,11 +53,7 @@ class simpleapp_tk(Tkinter.Tk):
 
         # Server response
         self.serverlog = Tkinter.Text(state='disabled', width=80, height=24, wrap='none', bg='black', fg='white')
-        self.serverlog.grid(column=0,row=0,columnspan=1,sticky='EW')
-        self.serverlog.grid(column=1,row=0)
-
-        #label = Tkinter.Label(self, anchor="w",fg="white",bg="blue")
-        #label.grid(column=0,row=1,columnspan=2,sticky='EW')
+        self.serverlog.grid(column=1,row=0,columnspan=1,sticky='EW')
 
         # Local system response
         self.log = Tkinter.Text(state='disabled', width=80, height=24, wrap='none', bg='black', fg='green')
@@ -62,12 +62,11 @@ class simpleapp_tk(Tkinter.Tk):
         self.grid_columnconfigure(0,weight=1)
         self.resizable(True,False)
 
-    def OnButtonClick(self):
-        print "You clicked the button !"
-
     def OnPressEnter(self,event):
         print "You pressed enter !"
+        
         self.interpet(self.entry.get())
+
         self.entry.delete(0, len(self.entry.get()))
 
     def writeToScreen(self, msg):
@@ -91,7 +90,7 @@ class simpleapp_tk(Tkinter.Tk):
         self.serverlog['state'] = 'disabled'
 
     def interpet(self, command):
-        validCommands = ['connect']
+        validCommands = ['connect', 'serverinfo']
         # write the command to the screen
         self.writeToScreen(command)
         # write to debug screen
@@ -102,6 +101,7 @@ class simpleapp_tk(Tkinter.Tk):
             keyword = command[:command.find(' ')]
         else:
             keyword = command
+
         # write to debug screen
         print 'keyword: "%s"' % keyword        
 
@@ -116,16 +116,18 @@ class simpleapp_tk(Tkinter.Tk):
                 else:
                     self.writeToScreen('Missing Required Parameters')
                 break
+
             if keyword not in validCommands:
                 self.writeToScreen('Invalid Command')
                 break
 
             #dict mapping commands to methods for easy selection
-            dictCommands = {'connect': self.connect}
+            dictCommands = {'connect': self.connect, 'serverinfo': self.serverinfo}
 
             #get the args from the string
             args = shlex.split(command[command.find(' '):])
 
+            # print out args on debug console
             for arg in args:
                 print arg
 
@@ -142,6 +144,13 @@ class simpleapp_tk(Tkinter.Tk):
             self.writeToScreen('Invalid parameters')
         else:
             self.writeToScreen('Attempting to connect to: ' + args[0])
+
+    def serverinfo(self, args):
+        self.writeToServerLog('Probing server for info...')
+        for i in range(1, 5):
+            self.writeToServerLog(">"*i)
+            time.sleep(0.25)
+        self.writeToServerLog('OS: Redhat Linux 3.4.15')
 
 if __name__ == "__main__":
     app = simpleapp_tk(None)
