@@ -1,16 +1,15 @@
-import sys, os, shlex, time
+import sys, os, shlex, time, md5
 
-print "Initializating connection handshake to secure server..."
 #show blinking cursor, disable keyboard entry
 #wait
-print "Encrypting connection..."
-print "Generating RSA/DXS algorthim key..."
-# print random 200 random characters medium speed
-print "Connected....welcome back hacker."
+#print "Encrypting connection..."
+#print "Generating RSA/DXS algorthim key..."
+# print random 200 random characters medium speed or md5 hash
+#print "Connected....welcome back hacker."
 # wait
 
 # while true
-print ">"
+#print ">"
 # wait for input
 # if input not in command list
 # print "Command Not Found"
@@ -35,49 +34,70 @@ print ">"
 # -*- coding: iso-8859-1 -*-
 
 import Tkinter
+from Tkinter import END
 
 class simpleapp_tk(Tkinter.Tk):
+# ^ make simpleapp_tk a full blown Tk with access to all tools
+
     def __init__(self,parent):
-        Tkinter.Tk.__init__(self,parent)
+        Tkinter.Tk.__init__(self, parent)
+        # ^ initialize the super class
         self.parent = parent
+        # ^ global parent
         self.initialize()
+        # ^ run to build the window
 
     def initialize(self):
+        # create a grid
         self.grid()
 
-        # Text command line
-        self.entry = Tkinter.Entry(self)
-        self.entry.grid(column=0,row=1,columnspan=2,sticky='EW')
-        self.entry.bind("<Return>", self.OnPressEnter)
-        self.entry.focus()
+        # Your computer nameplate
+        self.serverLabel = Tkinter.Label(text="Your Computer:")
+        self.serverLabel.grid(column=0,row=0,columnspan=1,sticky='W')
+
+        # Connected server nameplate
+        self.serverLabel = Tkinter.Label(text="Server: INSERT NAME HERE")
+        self.serverLabel.grid(column=1,row=0,columnspan=1,sticky='W')
 
         # Server response
         self.serverlog = Tkinter.Text(state='disabled', width=80, height=24, wrap='none', bg='black', fg='white')
-        self.serverlog.grid(column=1,row=0,columnspan=1,sticky='EW')
+        self.serverlog.grid(column=1,row=1,columnspan=1,sticky='EW')
 
         # Local system response
         self.log = Tkinter.Text(state='disabled', width=80, height=24, wrap='none', bg='black', fg='green')
-        self.log.grid(column=0,row=0,columnspan=1,sticky='EW')
+        self.log.grid(column=0,row=1,columnspan=1,sticky='EW')
 
+        # Text command line
+        self.entry = Tkinter.Entry(self, bg='black', fg='green')
+        self.entry.grid(column=0,row=3,columnspan=2,sticky='EW')
+
+        #Capture the Return key
+        self.entry.bind("<Return>", self.OnPressEnter)
+        
+        #Capture the Backspace key
+        self.entry.bind("<BackSpace>", self.OnPressBackSpace)
+        
+        #Insert the first > in the console
+        self.entry.insert(0, '> ')
+
+        #Put the cursor in the box
+        self.entry.focus()        
+
+        ## ???
         self.grid_columnconfigure(0,weight=1)
         self.resizable(True,False)
 
-    def OnPressEnter(self,event):
-        print "You pressed enter !"
-        
-        self.interpet(self.entry.get())
-
-        self.entry.delete(0, len(self.entry.get()))
+        self.welcomeUser()
 
     def writeToScreen(self, msg):
-        numlines = self.log.index('end - 1 line').split('.')[0]
+        #numlines = self.log.index('end - 1 line').split('.')[0]
         self.log['state'] = 'normal'
-        if numlines==24:
-            self.log.delete(1.0, 2.0)
-        if self.log.index('end-1c')!='1.0':
-            self.log.insert('end', '\n')
-        self.log.insert('end', msg)
-        self.log['state'] = 'disabled'    
+        #if numlines==24:
+        #    self.log.delete(1.0, 2.0)
+        #if self.log.index('end-1c')!='1.0':
+        #    self.log.insert('end', '\n')
+        self.log.insert('end', msg)        
+        self.log['state'] = 'disabled'
 
     def writeToServerLog(self, msg):
         numlines = self.serverlog.index('end - 1 line').split('.')[0]
@@ -88,6 +108,80 @@ class simpleapp_tk(Tkinter.Tk):
             self.serverlog.insert('end', '\n')
         self.serverlog.insert('end', msg)
         self.serverlog['state'] = 'disabled'
+
+    def typewriter(self, screen, msg, pace):
+
+        for char in msg:
+            if screen == "client":
+                self.log['state'] = 'normal'
+                self.log.insert('end', char)
+                self.log['state'] = 'disabled'
+            if screen == "server":
+                self.serverlog['state'] = 'normal'
+                self.serverlog.insert('end', char)
+                self.serverlog['state'] = 'disabled'
+            self.log.update()
+            time.sleep(pace)
+
+    def welcomeUser(self):
+        self.typewriter("client", "Initializating connection to secure server", 0.025)
+        self.typewriter("client", "...\n", 0.10)
+        self.typewriter("client", "Encrypting connection", 0.025)
+        self.typewriter("client", "...\n", 0.025)
+        self.blinkCursor(3)
+        self.typewriter("client", "Generating RSA/DXS algorthim key", 0.025)
+        self.typewriter("client", "...\n", 0.025)
+        self.blinkCursor(2)
+        # # print random 200 random characters medium speed
+        self.typewriter("client", "Connected...\n", 0.025)
+        self.typewriter("client", "Welcome back hacker", 0.025)
+
+    def blinkCursor(self, times):
+        for x in range(0, times):
+            self.log['state'] = 'normal'
+            self.log.insert('end', '_')
+            # take the string currently in the widget, all the way up to the last character
+            txt = self.log.get("1.0",END)[:-1]
+            txt = txt[:-1]
+            self.log.update()
+            time.sleep(0.4)
+            # clear the widget of text
+            self.log.delete("0.0", END)
+            # insert the new string, sans the last character
+            self.log.insert("0.0", txt)
+            self.log['state'] = 'disabled'
+            self.log.update()
+            time.sleep(0.4)
+
+    def OnPressBackSpace(self, event):
+
+        #get what is in the textbox
+        prevTypedText = self.entry.get()
+
+        # entry.get() captures what the input looked like BEFORE the bksp key
+        # was hit. Stupid. So I have to take the text captured and subtract one
+        # letter to get the currentText in the box
+        currentText = prevTypedText[:-1]
+
+        # If the user deleted the space after the carrot, re-insert it
+        if currentText == '>':
+            #delete what is in the text box
+            self.entry.delete(0, len(self.entry.get()))
+            
+            # insert the correctly formatted prompt    
+            self.entry.insert(0, ">  ")
+            # ^ a double space is needed instead of " " I had to use "  "
+
+    def OnPressEnter(self,event):
+        
+        # strip the command of "> " and send the command off to be interpeted
+        self.interpet(self.entry.get()[2:])
+
+        # delete the command typed in the textbox
+        self.entry.delete(0, len(self.entry.get()))
+
+        # insert the prper command line prompt
+        self.entry.insert(0, '> ')
 
     def interpet(self, command):
         validCommands = ['connect', 'serverinfo']
