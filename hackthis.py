@@ -8,19 +8,6 @@ import sys, os, shlex, time, md5
 #print "Connected....welcome back hacker."
 # wait
 
-# while true
-#print ">"
-# wait for input
-# if input not in command list
-# print "Command Not Found"
-# else
-# run command
-
-# commands
-# connect to server
-
-
-
 # > begin hacking
 #  -> show on server response terminal (SRT): "Connected to server X"
 # \> run serverinfo
@@ -134,7 +121,7 @@ class simpleapp_tk(Tkinter.Tk):
         self.blinkCursor(2)
         # # print random 200 random characters medium speed
         self.typewriter("client", "Connected...\n", 0.025)
-        self.typewriter("client", "Welcome back hacker", 0.025)
+        self.typewriter("client", "Welcome back hacker\n\n\n", 0.025)
 
     def blinkCursor(self, times):
         for x in range(0, times):
@@ -184,9 +171,9 @@ class simpleapp_tk(Tkinter.Tk):
         self.entry.insert(0, '> ')
 
     def interpet(self, command):
-        validCommands = ['connect', 'serverinfo']
+        validCommands = ['connect', 'serverinfo', 'ls']
         # write the command to the screen
-        self.writeToScreen(command)
+        self.writeToScreen(command + '\n')
         # write to debug screen
         print 'Command: "%s"' % command
 
@@ -200,23 +187,12 @@ class simpleapp_tk(Tkinter.Tk):
         print 'keyword: "%s"' % keyword        
 
         while True:
-            # look for a space
-            if command.find(' ') > 0:
-                #legit command with a space after keyword
-                pass
-            else:
-                if keyword not in validCommands:
-                    self.writeToScreen('Invalid Command')
-                else:
-                    self.writeToScreen('Missing Required Parameters')
-                break
-
             if keyword not in validCommands:
-                self.writeToScreen('Invalid Command')
+                self.writeToScreen('Invalid Command\n')
                 break
 
             #dict mapping commands to methods for easy selection
-            dictCommands = {'connect': self.connect, 'serverinfo': self.serverinfo}
+            dictCommands = {'connect': self.connect, 'serverinfo': self.serverinfo, 'ls': self.ls}
 
             #get the args from the string
             args = shlex.split(command[command.find(' '):])
@@ -235,16 +211,19 @@ class simpleapp_tk(Tkinter.Tk):
         print 'connect method running'
         print len(args)
         if len(args) != 1:
-            self.writeToScreen('Invalid parameters')
+            self.writeToScreen('Invalid parameters\n')
         else:
-            self.writeToScreen('Attempting to connect to: ' + args[0])
+            self.typewriter("client", 'Attempting to connect to: ' + args[0] + '...\n', 0.025)
 
     def serverinfo(self, args):
-        self.writeToServerLog('Probing server for info...')
+        self.writeToServerLog('Probing server for info...\n')
         for i in range(1, 5):
             self.writeToServerLog(">"*i)
             time.sleep(0.25)
-        self.writeToServerLog('OS: Redhat Linux 3.4.15')
+        self.writeToServerLog('OS: Redhat Linux 3.4.15\n')
+
+    def ls(self, args):
+        self.typewriter('client','Installed programs: connect ls serverinfo', 0.025)
 
 if __name__ == "__main__":
     app = simpleapp_tk(None)
