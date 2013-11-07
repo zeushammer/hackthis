@@ -151,6 +151,7 @@ class simpleapp_tk(Tkinter.Tk):
         #         Version: 5.1.26-rc
 
         # Open Ports Required for Crack: Overload
+        pass
 
     def blinkCursor(self, times):
         for x in range(0, times):
