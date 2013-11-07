@@ -111,6 +111,9 @@ class simpleapp_tk(Tkinter.Tk):
             time.sleep(pace)
 
     def welcomeUser(self):
+        self.typewriter("client", "Query for clearance", 0.025)
+        self.typewriter("client", "...\n", 0.10)
+        self.blinkCursor(3) 
         self.typewriter("client", "Initializating connection to secure server", 0.025)
         self.typewriter("client", "...\n", 0.10)
         self.typewriter("client", "Encrypting connection", 0.025)
@@ -123,6 +126,32 @@ class simpleapp_tk(Tkinter.Tk):
         self.typewriter("client", "Connected...\n", 0.025)
         self.typewriter("client", "Welcome back hacker\n\n\n", 0.025)
 
+    def sampleHack(self):
+        # Initiate Battering Ram
+        # <A>NEB/NJS<EBA>(NETI=3V)MB1-WK
+        # (BEM)RAMJET/SYPHON -XP FUNCTIONS
+        # TO SECONDARY-SYSTEMS{WATC} DEL SWB
+        # --SOFTWARE OVERRIDE
+        #
+        # <P> PROGRAM - SYPHON/CLI
+        # <C> MUTABENIC RESEARCH FILES/WES
+        # TO-<B> SWITCH K*CODE/MEMORY APLH
+        # NULL/NOID PROCESSON-45
+        # 
+        # ....
+        #
+        # SECURITY SYSTEM DISABLED
+
+        # or
+
+        # In Soviet Russia, SQL Injects you...
+        # [+] URL: http://www.suckerdomain.io/videos?dvdId=70
+        # [+] Database: sonypictures
+        #         User: root@localhost
+        #         Version: 5.1.26-rc
+
+        # Open Ports Required for Crack: Overload
+
     def blinkCursor(self, times):
         for x in range(0, times):
             self.log['state'] = 'normal'
@@ -130,6 +159,7 @@ class simpleapp_tk(Tkinter.Tk):
             # take the string currently in the widget, all the way up to the last character
             txt = self.log.get("1.0",END)[:-1]
             txt = txt[:-1]
+            # update the screen outside the thread
             self.log.update()
             time.sleep(0.4)
             # clear the widget of text
@@ -138,7 +168,7 @@ class simpleapp_tk(Tkinter.Tk):
             self.log.insert("0.0", txt)
             self.log['state'] = 'disabled'
             self.log.update()
-            time.sleep(0.4)
+            time.sleep(0.4) 
 
     def OnPressBackSpace(self, event):
 
