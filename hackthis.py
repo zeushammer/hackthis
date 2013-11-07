@@ -1,19 +1,19 @@
 import sys, os, shlex, time, md5
 
-#show blinking cursor, disable keyboard entry
-#wait
-#print "Encrypting connection..."
-#print "Generating RSA/DXS algorthim key..."
+# show blinking cursor, disable keyboard entry
+# wait
+# print "Encrypting connection..."
+# print "Generating RSA/DXS algorithm key..."
 # print random 200 random characters medium speed or md5 hash
-#print "Connected....welcome back hacker."
+# print "Connected....welcome back hacker."
 # wait
 
 # > begin hacking
 #  -> show on server response terminal (SRT): "Connected to server X"
-# \> run serverinfo
+#    \> run serverinfo
 #  -> show on SRT: info about target, searching for relevant exploit, found THIS
-# \> load payload THIS
-# \> initiate hack payload
+#    \> load payload THIS
+#    \> initiate hack payload
 #  -> "spit out attempt to hack"
 # if hack fails, then username/password crack
 # else hack successful, hacker on the server
@@ -39,7 +39,7 @@ class simpleapp_tk(Tkinter.Tk):
         self.grid()
 
         # Your computer nameplate
-        self.serverLabel = Tkinter.Label(text="Your Computer:")
+        self.serverLabel = Tkinter.Label(text="User:")
         self.serverLabel.grid(column=0,row=0,columnspan=1,sticky='W')
 
         # Connected server nameplate
@@ -173,7 +173,7 @@ class simpleapp_tk(Tkinter.Tk):
 
     def OnPressBackSpace(self, event):
 
-        #get what is in the textbox
+        # get what is in the textbox
         prevTypedText = self.entry.get()
 
         # entry.get() captures what the input looked like BEFORE the bksp key
@@ -204,7 +204,7 @@ class simpleapp_tk(Tkinter.Tk):
     def interpet(self, command):
         validCommands = ['connect', 'serverinfo', 'ls']
         # write the command to the screen
-        self.writeToScreen(command + '\n')
+        self.writeToScreen('> ' + command + '\n')
         # write to debug screen
         print 'Command: "%s"' % command
 
@@ -222,10 +222,10 @@ class simpleapp_tk(Tkinter.Tk):
                 self.writeToScreen('Invalid Command\n')
                 break
 
-            #dict mapping commands to methods for easy selection
+            # dict mapping commands to methods for easy selection
             dictCommands = {'connect': self.connect, 'serverinfo': self.serverinfo, 'ls': self.ls}
 
-            #get the args from the string
+            # get the args from the string
             args = shlex.split(command[command.find(' '):])
 
             # print out args on debug console
@@ -254,7 +254,7 @@ class simpleapp_tk(Tkinter.Tk):
         self.writeToServerLog('OS: Redhat Linux 3.4.15\n')
 
     def ls(self, args):
-        self.typewriter('client','Installed programs: connect ls serverinfo', 0.025)
+        self.typewriter('client','Installed programs: connect ls serverinfo\n', 0.025)
 
 if __name__ == "__main__":
     app = simpleapp_tk(None)
