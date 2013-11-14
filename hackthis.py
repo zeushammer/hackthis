@@ -15,7 +15,7 @@ import sys, os, shlex, time, md5
 #    \> load payload THIS
 #    \> initiate hack payload
 #  -> "spit out attempt to hack"
-# if hack fails, then username/password crack
+# if hack fails, then username/password "break"
 # else hack successful, hacker on the server
 #!/usr/bin/python
 # -*- coding: iso-8859-1 -*-
@@ -112,18 +112,20 @@ class simpleapp_tk(Tkinter.Tk):
 
     def welcomeUser(self):
         self.typewriter("client", "Query for clearance", 0.025)
-        self.typewriter("client", "...\n", 0.10)
+        self.typewriter("client", "... ", 1)
+        self.typewriter('client', "[Clearance granted]\n", 0)
         self.blinkCursor(3) 
-        self.typewriter("client", "Initializating connection to secure server", 0.025)
-        self.typewriter("client", "...\n", 0.10)
+        self.typewriter("client", "Initializing connection to secure server", 0.025)
+        self.typewriter("client", "... ", 1)
+        self.typewriter("client", "[OK]\n", 0)
         self.typewriter("client", "Encrypting connection", 0.025)
         self.typewriter("client", "...\n", 0.025)
         self.blinkCursor(3)
         self.typewriter("client", "Generating RSA/DXS algorthim key", 0.025)
-        self.typewriter("client", "...\n", 0.025)
+        self.typewriter("client", "...\n", 1)
         self.blinkCursor(2)
         # # print random 200 random characters medium speed
-        self.typewriter("client", "Connected...\n", 0.025)
+        self.typewriter("client", "Connection successful\n\n", 0.025)
         self.typewriter("client", "Welcome back hacker\n\n\n", 0.025)
 
     def sampleHack(self):
@@ -202,7 +204,7 @@ class simpleapp_tk(Tkinter.Tk):
         self.entry.insert(0, '> ')
 
     def interpet(self, command):
-        validCommands = ['connect', 'serverinfo', 'ls']
+        validCommands = ['connect', 'serverinfo', 'ls', 'logout']
         # write the command to the screen
         self.writeToScreen('> ' + command + '\n')
         # write to debug screen
@@ -223,7 +225,7 @@ class simpleapp_tk(Tkinter.Tk):
                 break
 
             # dict mapping commands to methods for easy selection
-            dictCommands = {'connect': self.connect, 'serverinfo': self.serverinfo, 'ls': self.ls}
+            dictCommands = {'connect': self.connect, 'serverinfo': self.serverinfo, 'ls': self.ls, 'logout': self.logout}
 
             # get the args from the string
             args = shlex.split(command[command.find(' '):])
@@ -256,7 +258,17 @@ class simpleapp_tk(Tkinter.Tk):
     def ls(self, args):
         self.typewriter('client','Installed programs: connect ls serverinfo\n', 0.025)
 
+    def logout(self, args):
+        self.typewriter('client', 'Logging out', 0.025)
+        self.typewriter('client', '...\n', 1)
+        self.typewriter('client', 'User logout successful\n', 0.025)
+        # add a way to have game quit after logout
+
 if __name__ == "__main__":
     app = simpleapp_tk(None)
     app.title('my application')
     app.mainloop()
+
+
+
+

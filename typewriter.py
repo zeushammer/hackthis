@@ -11,3 +11,5 @@ def typewrite(pace,text):
         time.sleep(pace)
     print "\n"
 
+
+
