@@ -23,10 +23,6 @@ class simpleapp_tk(Tkinter.Tk):
 
 		self.title('Hack This Ver: 0.2')
 
-		# User's computer name
-		self.windowLabel = Tkinter.Label(text="User:")
-		self.windowLabel.grid(column=0, row=0, columnspan=1, sticky='W')
-
 		# Local system response
 		self.log = Tkinter.Text(state='disabled', width=80, height=24, \
 			wrap='none', bg='black', fg='green')
@@ -39,6 +35,12 @@ class simpleapp_tk(Tkinter.Tk):
 		# Capture the Return key
 		self.entry.bind("<Return>", self.OnPressEnter)
 
+		# Capture the Up key
+		self.entry.bind("<Up>", self.OnPressUp)
+
+		# Capture the Down key
+		self.entry.bind("<Down>", self.OnPressDown)
+
 		# Capture the Backspace key
 		self.entry.bind("<BackSpace>", self.OnPressBackSpace)
 
@@ -47,6 +49,12 @@ class simpleapp_tk(Tkinter.Tk):
 
 		# Put cursor in GUI box
 		self.entry.focus()
+
+		# Ordered list for command history
+		self.cmdhistory = []
+
+		# iter for list spot
+		self.cmdhistorySpot = 0
 
 		## ???
 		self.grid_columnconfigure(0, weight=1)
@@ -133,8 +141,14 @@ class simpleapp_tk(Tkinter.Tk):
 			self.log.update()
 			time.sleep(0.4)
 
-	def OnPressBackSpace(self, event):
+	def randomProcessTime(self):
+		self.typeWrite('[', 1)
+		for i in range(1, 11):
+			self.typeWrite('-', 1)
+			time.sleep(0.25)
+		self.typeWrite(']', 1)
 
+	def OnPressBackSpace(self, event):
 		# get what is in textbox
 		prevTypedText = self.entry.get()
 
@@ -153,9 +167,8 @@ class simpleapp_tk(Tkinter.Tk):
 			# a double space is NEEDED instead of " " used previously
 
 	def OnPressEnter(self, event):
-
-		# strip command of "> " and send command to be interpreted
-		self.interpret(self.entry.get()[2:])
+		# temporary store command
+		command = self.entry.get()[2:]
 
 		# delete command typed in textbox
 		self.entry.delete(0, len(self.entry.get()))
@@ -163,16 +176,70 @@ class simpleapp_tk(Tkinter.Tk):
 		# re-insert correctly formatted prompt
 		self.entry.insert(0, '> ')
 
+		# strip command of "> " and send command to be interpreted
+		self.interpret(command)
+
+	def OnPressDown(self, event):
+		# delete anything in the box
+		self.entry.delete(0, len(self.entry.get()))
+
+		# if the spot is at the first item entered by the user
+		if len(self.cmdhistory) - 1 == self.cmdhistorySpot:
+			pass
+		else:
+			# move up in the list
+			self.cmdhistorySpot += 1
+
+		try:
+			# debug print the last command appended
+			print 'History Down: ' + self.cmdhistory[self.cmdhistorySpot]
+			# print the prompt
+			self.entry.insert(0, '> ')
+			# print the command
+			self.entry.insert(2, self.cmdhistory[self.cmdhistorySpot])
+		except:
+			# do nothing if we are outside the bounds (shocking really, and quite funny)
+			pass
+
+	def OnPressUp(self, event):
+		# delete anything in the box
+		self.entry.delete(0, len(self.entry.get()))
+
+		#if the spot is at the most recent item in the list
+		if self.cmdhistorySpot == 0:
+			pass
+		else:
+			# move down in the list
+			self.cmdhistorySpot -= 1
+
+		try:
+			# debug print the last command appended
+			print 'History Up: ' + self.cmdhistory[self.cmdhistorySpot]
+			# print the prompt
+			self.entry.insert(0, '> ')
+			# print the command
+			self.entry.insert(2, self.cmdhistory[self.cmdhistorySpot])			
+		except:
+			# do nothing if we are outside the bounds (shocking really, and quite funny)
+			pass
+
 	def interpret(self, command):
 		validCommands = ['connect', 'serverinfo', 'ls', 'logout']
 		# write the command to the screen
 		self.writeToScreen('> ' + command + '\n')
+		
 		# write to debug screen
 		print 'Command: "%s"' % command
 
+		# store in command history
+		self.cmdhistory.append(command)
+
+		# set spot to the max
+		self.cmdhistorySpot = len(self.cmdhistory) - 1
+
 		# get the keyword attempted
 		if command.find(' ') > 0:
-			keyword = command[:comand.find(' ')]
+			keyword = command[:command.find(' ')]
 		else:
 			keyword = command
 
@@ -214,15 +281,19 @@ class simpleapp_tk(Tkinter.Tk):
 			self.typeWrite('...\n', 0.025)
 
 	def serverinfo(self, args):
-		self.writeToScreen('Probbing server for info...\n')
-		for i in range(1, 11):
-			self.typeWrite('>', 1)
-			time.sleep(0.25)
+		self.writeToScreen('Probbing server for info ')
+		self.randomProcessTime()
 		self.writeToScreen('\nOS: Redhat Linux 3.4.15\n')
+		self.writeToScreen('Processor: Intel Zenon X2\n')
+		self.writeToScreen('RAM: 2 Gb\n')
+		self.writeToScreen('Up Time: 17454.34 secs\n')
+		self.writeToScreen('Open ports: ')
+		self.blinkCursor(2)
+		self.writeToScreen('21, 223, 445\n')
 
 	def ls(self, args):
 		self.writeToScreen('Installed programs:\n')
-		self.writeToScreen('connect ls serverinfo logout')
+		self.writeToScreen('connect ls serverinfo logout\n')
 
 	def logout(self, args):
 		self.typeWrite('Logging out', 0.025)
